@@ -16,12 +16,12 @@
 	   (:CALL (apply (second expr) (map-eval-li (cddr expr) env)))
 	   (:MCALL (let* ((fun (get-li-defun (second expr)))
 			  (nenv (make-array (+ 1 (second fun)))))
-		     (map-eval-li (cddr fun) (make-fill-env-eval-li (cddr expr) env nenv 1))))
+		     (eval-li (cddr fun) (make-fill-env-eval-li (cddr expr) env nenv 1))))
 	   (:PROGN (eval-li-progn (cdr expr) env))
 	   (:UNKNOWN (let ((nexpr (lisp2li (second expr)(third expr))))
 		       (if (eq (car nexpr) :UNKNOWN)
 			   (error "unknown ~s" expr)
-			 (eval-li nexpr env)))))))
+			   (eval-li nexpr env)))))))
 
 ;;allows us to run eval-li step by step 
 (defun map-eval-li (lexpr env)
@@ -45,10 +45,9 @@
 (defun map-eval-li-make-env (nbexpr lexpr env)
   (if (eq nbexpr 0)
       ()
-    (lambda (nbexpr) (lambda (nexpr) (setf eval-arr (make-array nbexpr
+    (lambda (nbexpr) (lambda (nbexpr) (setf eval-arr (make-array nbexpr
                                                                 :initial-contents (eval-li (car lexpr) env)))
                        (concatenate 'array eval-arr (map-eval-li-make-env (- nbexpr 1) (cdr lexpr) env))))))
-
 
 (defun make-fill-env-eval-li (args env nenv index)
   (if
