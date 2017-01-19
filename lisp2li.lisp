@@ -94,14 +94,6 @@
 
 ;;redefines set
 (defun set-li-defun (expr env)
-					;(if (symbolp (second expr))
-					;   (list
-					;   :SET-VAR
-					;  (lisp2li (second expr) env)
-					; (lisp2li (third expr) env))
-					; (list
-					;  :SETF
-					; (lisp2li (second expr) env))))
   (setf (get expr :DEFUN) env))
 
 ;;checks if fun is known in the environment
